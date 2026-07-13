@@ -2041,16 +2041,18 @@ Criar toda a estrutura inicial do projeto e configurar o ambiente de desenvolvim
 
 ## Infraestrutura
 
-- [ ] Criar repositório Git
-- [ ] Commitar o PRD.md
-- [ ] Inicializar projeto utilizando `uv init`
-- [ ] Criar ambiente virtual com `uv venv`
-- [ ] Configurar `pyproject.toml`
-- [ ] Criar arquivo `.python-version`
-- [ ] Criar `.gitignore`
-- [ ] Criar `.env.example`
-- [ ] Criar `README.md`
-- [ ] Definir licença do projeto
+
+- [X] Criar repositório Git
+- [X] Commitar o PRD.md
+- [X] Inicializar projeto utilizando `uv init`
+- [X] Criar ambiente virtual com `uv venv`
+- [X] Configurar `pyproject.toml`
+- [X] Criar arquivo `.python-version`
+- [X] Criar `.gitignore`
+- [X] Criar `.env.example`
+- [X] Criar `README.md`
+- [X] Definir licença do projeto
+
 
 ---
 
