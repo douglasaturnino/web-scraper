@@ -63,13 +63,15 @@
 39. [Requisitos  não  Funcionais](#39-requisitos-não-funcionais)
 40. [Casos  de  Uso](#40-casos-de-uso)
 41. [Estratégia  de  Testes](#41-estratégia-de-testes)
-42. [Boas  Práticas](#42-boas-práticas)
-43. [Roadmap](#43-roadmap)
-44. [Planejamento  do  Desenvolvimento](#44-planejamento-do-desenvolvimento)
-45. [Plano  de  Implementação](#45-plano-de-implementação)
-46. [Critérios  gerais  de  Conclusão](#46-critérios-gerais-de-conclusão)
-47. [Roadmap pós  Versão  1](#47-roadmap-pós-versão-1)
-48. [Considerações Finais](#48-considerações-finais)
+42. [Cobertura de Testes](#42-cobertura-de-testes)
+43. [Documentação](#43-documentação)
+44. [Boas  Práticas](#44-boas-práticas)
+45. [Roadmap](#45-roadmap)
+46. [Planejamento  do  Desenvolvimento](#46-planejamento-do-desenvolvimento)
+47. [Plano  de  Implementação](#47-plano-de-implementação)
+48. [Critérios  gerais  de  Conclusão](#48-critérios-gerais-de-conclusão)
+49. [Roadmap pós  Versão  1](#49-roadmap-pós-versão-1)
+50. [Considerações Finais](#50-considerações-finais)
 
 ---
 
@@ -1956,7 +1958,78 @@ Cobrir:
 
 ---
 
-# 42. Boas Práticas
+# 42. Cobertura de Testes
+
+Toda a aplicação deverá manter uma cobertura de testes mínima de 80%.
+
+## Regras
+
+- Todo módulo novo deve possuir testes.
+- Nenhum PR será aceito sem manter a cobertura mínima.
+- Testes unitários são obrigatórios para Services, Repositories e Providers.
+- Testes de integração são obrigatórios para API, Banco de Dados e Scheduler.
+
+## Ferramentas
+
+- `pytest-cov` para medição de cobertura
+- `coverage` como backend de relatórios
+
+## Validação
+
+```bash
+pytest --cov=src --cov-report=term-missing --cov-fail-under=80
+```
+
+## Exclusões
+
+Podem ser excluídos do cálculo:
+
+- Arquivos de configuração
+- `main.py`
+- Schemas Pydantic gerados automaticamente
+
+---
+
+# 43. Documentação
+
+Toda a aplicação deverá seguir o padrão de documentação Google Style para docstrings.
+
+## Regras
+
+- Todo módulo, classe, função e método público devem possuir docstring.
+- As docstrings devem seguir o formato Google Style.
+- Nenhum módulo novo será aceito sem documentação.
+- A documentação será verificada em CI/CD.
+
+## Formato
+
+```python
+def buscar_vagas(keyword: str, estado: str) -> list[dict]:
+    """Busca vagas na plataforma.
+
+    Args:
+        keyword (str): Palavra-chave da busca.
+        estado (str): Estado para filtrar as vagas.
+
+    Returns:
+        vagas (list[dict]): Lista de vagas encontradas.
+
+    Raises:
+        ProviderError: Caso o provider falhe.
+    """
+```
+
+## Exclusões
+
+Podem ser excluídos da verificação:
+
+- Arquivos de configuração
+- `main.py`
+- Schemas Pydantic gerados automaticamente
+
+---
+
+# 44. Boas Práticas
 
 - Não acessar banco diretamente.
 - Não duplicar código entre Providers.
@@ -1970,7 +2043,7 @@ Cobrir:
 
 ---
 
-# 43. Roadmap
+# 45. Roadmap
 
 ## Novos Providers
 
@@ -1999,7 +2072,7 @@ Cobrir:
 
 ---
 
-# 44. Planejamento do Desenvolvimento
+# 46. Planejamento  do  Desenvolvimento
 
 O desenvolvimento será dividido em Sprints pequenas.
 
@@ -2014,7 +2087,7 @@ Todas as tarefas deverão ser concluídas antes do início da Sprint seguinte.
 
 ---
 
-# 45. Plano de Implementação
+# 47. Plano  de  Implementação
 
 ## Objetivo
 
@@ -2058,52 +2131,53 @@ Criar toda a estrutura inicial do projeto e configurar o ambiente de desenvolvim
 
 ## Dependências
 
-- [ ] Adicionar FastAPI
-- [ ] Adicionar SQLAlchemy
-- [ ] Adicionar Alembic
-- [ ] Adicionar PostgreSQL Driver
-- [ ] Adicionar aiohttp
-- [ ] Adicionar BeautifulSoup4
-- [ ] Adicionar Loguru
-- [ ] Adicionar Pydantic
-- [ ] Adicionar Pytest
-- [ ] Adicionar Ruff
+- [X] Adicionar FastAPI
+- [X] Adicionar SQLAlchemy
+- [X] Adicionar Alembic
+- [X] Adicionar PostgreSQL Driver
+- [X] Adicionar aiohttp
+- [X] Adicionar BeautifulSoup4
+- [X] Adicionar Loguru
+- [X] Adicionar Pydantic
+- [X] Adicionar Pytest
+- [X] Adicionar Ruff
+- [X] Adicionar pre-commit
 
 ---
 
 ## Qualidade
 
-- [ ] Configurar Ruff
-- [ ] Criar regras de lint
-- [ ] Configurar pre-commit
-- [ ] Validar lint do projeto
+- [X] Configurar Ruff
+- [X] Criar regras de lint
+- [X] Configurar pre-commit
+- [X] Validar lint do projeto
 
 ---
 
 ## Estrutura
 
-- [ ] Criar estrutura de diretórios
-- [ ] Criar pacote `src`
-- [ ] Criar pacote `tests`
-- [ ] Criar pacote `providers`
-- [ ] Criar pacote `repositories`
-- [ ] Criar pacote `services`
-- [ ] Criar pacote `database`
-- [ ] Criar pacote `config`
-- [ ] Criar pacote `scheduler`
-- [ ] Criar pacote `api`
-- [ ] Criar pacote `queue`
-- [ ] Criar pacote `schemas`
-- [ ] Criar pacote `utils`
+- [X] Criar estrutura de diretórios
+- [X] Criar pacote `src`
+- [X] Criar pacote `tests`
+- [X] Criar pacote `providers`
+- [X] Criar pacote `repositories`
+- [X] Criar pacote `services`
+- [X] Criar pacote `database`
+- [X] Criar pacote `config`
+- [X] Criar pacote `scheduler`
+- [X] Criar pacote `api`
+- [X] Criar pacote `queue`
+- [X] Criar pacote `schemas`
+- [X] Criar pacote `utils`
 
 ---
 
 ## Critério de Aceite
 
-- [ ] Projeto executando
-- [ ] Ruff validando
-- [ ] Mypy validando
-- [ ] Estrutura criada
+- [X] Projeto executando
+- [X] Ruff validando
+- [X] Mypy validando
+- [X] Estrutura criada
 
 ---
 
@@ -2698,7 +2772,7 @@ Preparar a aplicação para implantação.
 
 ---
 
-# 46. Critérios Gerais de Conclusão
+# 48. Critérios Gerais de Conclusão
 
 O projeto será considerado concluído quando:
 
@@ -2716,7 +2790,7 @@ O projeto será considerado concluído quando:
 
 ---
 
-# 47. Roadmap Pós-Versão 1
+# 49. Roadmap Pós-Versão 1
 
 ## Novos Providers
 
@@ -2745,7 +2819,7 @@ O projeto será considerado concluído quando:
 
 ---
 
-# 48. Considerações Finais
+# 50. Considerações Finais
 
 O Job Scraper Service foi concebido para ser um serviço independente, extensível e de fácil manutenção, responsável exclusivamente pela coleta e persistência de vagas de emprego.
 
