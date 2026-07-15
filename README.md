@@ -13,3 +13,43 @@ Este projeto **não possui interface gráfica**, autenticação ou gerenciamento
 Seu único objetivo é realizar scraping de vagas e persistir as informações.
 
 
+
+## Instalação
+
+```bash
+git clone git@github.com:douglasaturnino/job-scraper
+cd job-scraper
+uv sync
+```
+## Configuração do Pre-commit
+
+Após instalar as dependências, instale os hooks do pre-commit:
+
+```bash
+uv run pre-commit install
+```
+
+Para executar todos os hooks manualmente nos arquivos do projeto:
+
+```bash
+uv run pre-commit run --all-files
+```
+
+Para executar os hooks apenas nos arquivos alterados:
+
+```bash
+uv run pre-commit run
+```
+
+Caso seja necessário atualizar as versões dos hooks configurados:
+
+```bash
+uv run pre-commit autoupdate
+```
+
+
+## Executar
+
+```bash
+uv run src/main.py
+```
