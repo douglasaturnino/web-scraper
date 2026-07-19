@@ -2205,19 +2205,19 @@ Centralizar todas as configurações da aplicação.
 
 ## Logger
 
-- [ ] Configurar Loguru
-- [ ] Criar logger global
-- [ ] Configurar rotação diária
-- [ ] Configurar retenção de logs
-- [ ] Configurar níveis de log
-- [ ] Criar formato padrão dos logs
+- [X] Configurar Loguru
+- [X] Criar logger global
+- [X] Configurar rotação diária
+- [X] Configurar retenção de logs
+- [X] Configurar níveis de log
+- [X] Criar formato padrão dos logs
 
 ---
 
 ## Critério de Aceite
 
-- [ ] Configurações carregadas corretamente
-- [ ] Logs funcionando
+- [X] Configurações carregadas corretamente
+- [X] Logs funcionando
 
 ---
 
