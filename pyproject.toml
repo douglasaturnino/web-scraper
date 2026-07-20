@@ -5,15 +5,18 @@ description = "Job Scraper Service - coletor de vagas de emprego"
 readme = "README.md"
 requires-python = ">=3.14"
 dependencies = [
+    "alembic>=1.18.5",
     "loguru>=0.7.3",
+    "psycopg2-binary>=2.9.12",
     "pydantic>=2.13.4",
     "pydantic-settings>=2.14.2",
-
+    "sqlalchemy>=2.0.51",
 ]
 
 
 [dependency-groups]
 dev = [
+    "httpx>=0.28.1",
     "mypy>=2.3.0",
     "pre-commit>=4.6.0",
     "pytest>=9.1.1",
