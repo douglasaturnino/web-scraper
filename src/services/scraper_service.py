@@ -1,5 +1,7 @@
 """Scraper service to orchestrate collection flow."""
 
+from collections.abc import Mapping
+
 from loguru import logger
 
 from src.database.models.job_search import JobSearch
@@ -16,7 +18,7 @@ class ScraperService:
         self,
         search_service: SearchService,
         vacancy_service: VacancyService,
-        providers: dict[str, BaseProvider],
+        providers: Mapping[str, BaseProvider],
     ) -> None:
         """Initialize service with dependencies.
 
