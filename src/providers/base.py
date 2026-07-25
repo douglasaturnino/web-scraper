@@ -33,3 +33,13 @@ class BaseProvider(Protocol):
         Returns:
             Vacancy | None: Found vacancy or None.
         """
+
+    def normalize(self, raw_data: dict[str, object]) -> Vacancy:
+        """Normalize raw provider data into a vacancy.
+
+        Args:
+            raw_data (dict[str, object]): Raw vacancy data.
+
+        Returns:
+            Vacancy: Normalized vacancy.
+        """
