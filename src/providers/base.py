@@ -1,5 +1,6 @@
 """Base provider protocol definition."""
 
+from collections.abc import Mapping
 from typing import Protocol, runtime_checkable
 
 from src.database.models.vacancy import Vacancy
@@ -31,11 +32,11 @@ class BaseProvider(Protocol):
             Vacancy | None: Found vacancy or None.
         """
 
-    def normalize(self, raw_data: dict[str, object]) -> Vacancy:
+    def normalize(self, raw_data: Mapping[str, object]) -> Vacancy:
         """Normalize raw provider data into a vacancy.
 
         Args:
-            raw_data (dict[str, object]): Raw vacancy data.
+            raw_data (Mapping[str, object]): Raw vacancy data.
 
         Returns:
             Vacancy: Normalized vacancy.

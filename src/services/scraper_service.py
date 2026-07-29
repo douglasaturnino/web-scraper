@@ -1,12 +1,10 @@
 """Scraper service to orchestrate collection flow."""
 
-from collections.abc import Mapping
-
 from loguru import logger
 
 from src.database.models.job_search import JobSearch
 from src.database.models.vacancy import Vacancy
-from src.providers.base import BaseProvider
+from src.providers.factory import ProviderFactory
 from src.services.search_service import SearchService
 from src.services.vacancy_service import VacancyService
 
@@ -18,14 +16,14 @@ class ScraperService:
         self,
         search_service: SearchService,
         vacancy_service: VacancyService,
-        providers: Mapping[str, BaseProvider],
+        providers: ProviderFactory,
     ) -> None:
         """Initialize service with dependencies.
 
         Args:
             search_service (SearchService): Search business rules.
             vacancy_service (VacancyService): Vacancy business rules.
-            providers (dict[str, BaseProvider]): Available providers.
+            providers (ProviderFactory): Provider factory for retrieval.
         """
         self._search_service = search_service
         self._vacancy_service = vacancy_service
@@ -41,8 +39,9 @@ class ScraperService:
         Returns:
             list[Vacancy]: Persisted vacancies.
         """
-        provider = self._providers.get(provider_name)
-        if provider is None:
+        try:
+            provider = self._providers.get(provider_name)
+        except ValueError:
             logger.warning(
                 "Provider {} not found for search {}",
                 provider_name,
@@ -89,8 +88,9 @@ class ScraperService:
         Returns:
             Vacancy | None: Persisted vacancy or None.
         """
-        provider = self._providers.get(provider_name)
-        if provider is None:
+        try:
+            provider = self._providers.get(provider_name)
+        except ValueError:
             logger.warning(
                 "Provider {} not found for manual URL",
                 provider_name,
