@@ -61,7 +61,6 @@ class ScraperService:
                 keyword=search.keyword,
                 state=search.state,
                 municipality=search.municipality,
-                remote=search.remote,
             )
         except Exception:
             logger.exception(

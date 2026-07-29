@@ -9,16 +9,13 @@ from src.database.models.vacancy import Vacancy
 class BaseProvider(Protocol):
     """Provider interface for collection orchestration."""
 
-    def search(
-        self, keyword: str, state: str, municipality: str, remote: bool
-    ) -> list[Vacancy]:
+    def search(self, keyword: str, state: str, municipality: str) -> list[Vacancy]:
         """Search vacancies.
 
         Args:
             keyword (str): Search keyword.
             state (str): State filter.
             municipality (str): Municipality filter.
-            remote (bool): Remote vacancy filter.
 
         Returns:
             list[Vacancy]: Found vacancies.

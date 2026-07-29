@@ -38,9 +38,7 @@ class FakeProvider(BaseProvider):
         """Initialize with fake vacancies."""
         self._vacancies = vacancies
 
-    def search(
-        self, keyword: str, state: str, municipality: str, remote: bool
-    ) -> list[Vacancy]:
+    def search(self, keyword: str, state: str, municipality: str) -> list[Vacancy]:
         """Return fake vacancies."""
         return self._vacancies
 
@@ -123,9 +121,7 @@ def test_execute_search_handles_provider_error(db: Session) -> None:
     vacancy_service = VacancyService(vacancy_repo)
 
     class ErrorProvider(BaseProvider):
-        def search(
-            self, keyword: str, state: str, municipality: str, remote: bool
-        ) -> list[Vacancy]:
+        def search(self, keyword: str, state: str, municipality: str) -> list[Vacancy]:
             raise RuntimeError("Provider failed")
 
         def get_job(self, url: str) -> Vacancy | None:
