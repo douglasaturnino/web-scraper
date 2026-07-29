@@ -1,5 +1,6 @@
 """Scraper service tests."""
 
+from collections.abc import Mapping
 from typing import Any
 
 from sqlalchemy.orm import Session
@@ -8,6 +9,7 @@ from src.database.models.job_search import JobSearch
 from src.database.models.job_search_provider import JobSearchProvider
 from src.database.models.vacancy import Vacancy
 from src.providers.base import BaseProvider
+from src.providers.factory import ProviderFactory
 from src.repositories.job_search_provider_repository import (
     JobSearchProviderRepository,
 )
@@ -46,7 +48,7 @@ class FakeProvider(BaseProvider):
         """Return a single fake vacancy."""
         return self._vacancies[0] if self._vacancies else None
 
-    def normalize(self, raw_data: dict[str, object]) -> Vacancy:
+    def normalize(self, raw_data: Mapping[str, object]) -> Vacancy:
         """Return the first fake vacancy."""
         return self._vacancies[0] if self._vacancies else _build_vacancy()
 
@@ -83,8 +85,9 @@ def test_execute_search_persists_vacancies(db: Session) -> None:
     db.commit()
 
     vacancy = _build_vacancy()
-    providers = {"linkedin": FakeProvider([vacancy])}
-    scraper = ScraperService(search_service, vacancy_service, providers)
+    factory = ProviderFactory()
+    factory.register("linkedin", FakeProvider([vacancy]))
+    scraper = ScraperService(search_service, vacancy_service, factory)
 
     provider_repo.add(
         JobSearchProvider(search_id=search.id, provider="linkedin", active=True)
@@ -105,7 +108,7 @@ def test_execute_search_handles_missing_provider(db: Session) -> None:
     vacancy_service = VacancyService(vacancy_repo)
 
     search = _build_search()
-    scraper = ScraperService(search_service, vacancy_service, {})
+    scraper = ScraperService(search_service, vacancy_service, ProviderFactory())
 
     saved = scraper.execute_search(search, "unknown")
 
@@ -127,12 +130,13 @@ def test_execute_search_handles_provider_error(db: Session) -> None:
         def get_job(self, url: str) -> Vacancy | None:
             return None
 
-        def normalize(self, raw_data: dict[str, object]) -> Vacancy:
+        def normalize(self, raw_data: Mapping[str, object]) -> Vacancy:
             raise RuntimeError("Provider failed")
 
     search = _build_search()
-    providers = {"linkedin": ErrorProvider()}
-    scraper = ScraperService(search_service, vacancy_service, providers)
+    factory = ProviderFactory()
+    factory.register("linkedin", ErrorProvider())
+    scraper = ScraperService(search_service, vacancy_service, factory)
 
     saved = scraper.execute_search(search, "linkedin")
 
@@ -148,8 +152,9 @@ def test_execute_by_url_persists_vacancy(db: Session) -> None:
     vacancy_service = VacancyService(vacancy_repo)
 
     vacancy = _build_vacancy(url="https://linkedin.com/jobs/view/999")
-    providers = {"linkedin": FakeProvider([vacancy])}
-    scraper = ScraperService(search_service, vacancy_service, providers)
+    factory = ProviderFactory()
+    factory.register("linkedin", FakeProvider([vacancy]))
+    scraper = ScraperService(search_service, vacancy_service, factory)
 
     result = scraper.execute_by_url("https://linkedin.com/jobs/view/999", "linkedin")
 
@@ -165,7 +170,7 @@ def test_execute_by_url_returns_none_for_missing_provider(db: Session) -> None:
     search_service = SearchService(search_repo, provider_repo)
     vacancy_service = VacancyService(vacancy_repo)
 
-    scraper = ScraperService(search_service, vacancy_service, {})
+    scraper = ScraperService(search_service, vacancy_service, ProviderFactory())
 
     result = scraper.execute_by_url("https://linkedin.com/jobs/view/999", "unknown")
 
@@ -189,8 +194,9 @@ def test_run_scheduler_executes_elegible_searches(db: Session) -> None:
     )
 
     vacancy = _build_vacancy()
-    providers = {"linkedin": FakeProvider([vacancy])}
-    scraper = ScraperService(search_service, vacancy_service, providers)
+    factory = ProviderFactory()
+    factory.register("linkedin", FakeProvider([vacancy]))
+    scraper = ScraperService(search_service, vacancy_service, factory)
 
     metrics = scraper.run_scheduler()
 
@@ -214,7 +220,7 @@ def test_run_scheduler_skips_inactive_searches(db: Session) -> None:
         JobSearchProvider(search_id=search.id, provider="linkedin", active=True)
     )
 
-    scraper = ScraperService(search_service, vacancy_service, {})
+    scraper = ScraperService(search_service, vacancy_service, ProviderFactory())
 
     metrics = scraper.run_scheduler()
 
