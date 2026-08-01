@@ -97,15 +97,24 @@ class GupyProvider(BaseProvider):
             raw_jobs = list(first_result["data"])
 
             if pages > 1:
-                tasks = []
-                for i in range(1, pages):
-                    queries: dict[str, str | int] = {
-                        "jobName": keyword,
-                        "limit": limit,
-                        "offset": limit * i,
-                    }
-                    tasks.append(self._fetch_api(session, queries))
+                semaphore = asyncio.Semaphore(get_settings().max_concurrent_requests)
 
+                async def _fetch_page(
+                    queries: dict[str, str | int],
+                ) -> dict[str, Any] | None:
+                    async with semaphore:
+                        return await self._fetch_api(session, queries)
+
+                tasks = [
+                    _fetch_page(
+                        {
+                            "jobName": keyword,
+                            "limit": limit,
+                            "offset": limit * i,
+                        }
+                    )
+                    for i in range(1, pages)
+                ]
                 results = await asyncio.gather(*tasks)
                 for res in results:
                     if isinstance(res, dict) and "data" in res:
