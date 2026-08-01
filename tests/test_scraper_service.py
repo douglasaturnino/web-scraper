@@ -226,3 +226,93 @@ def test_run_scheduler_skips_inactive_searches(db: Session) -> None:
 
     assert metrics["searches"] == 0
     assert metrics["vacancies"] == 0
+
+
+def test_execute_by_url_handles_provider_error(db: Session) -> None:
+    """Verify execute_by_url handles provider exceptions gracefully."""
+    search_repo = SearchRepository(db)
+    provider_repo = JobSearchProviderRepository(db)
+    vacancy_repo = VacancyRepository(db)
+    search_service = SearchService(search_repo, provider_repo)
+    vacancy_service = VacancyService(vacancy_repo)
+
+    class ErrorProvider(BaseProvider):
+        def search(self, keyword: str, state: str, municipality: str) -> list[Vacancy]:
+            raise RuntimeError("Provider failed")
+
+        def get_job(self, url: str) -> Vacancy | None:
+            raise RuntimeError("Provider failed")
+
+        def normalize(self, raw_data: Mapping[str, object]) -> Vacancy:
+            raise RuntimeError("Provider failed")
+
+    factory = ProviderFactory()
+    factory.register("linkedin", ErrorProvider())
+    scraper = ScraperService(search_service, vacancy_service, factory)
+
+    result = scraper.execute_by_url(
+        "https://www.linkedin.com/jobs/view/999", "linkedin"
+    )
+
+    assert result is None
+
+
+def test_execute_by_url_returns_none_when_provider_returns_none(
+    db: Session,
+) -> None:
+    """Verify execute_by_url returns None when provider returns None."""
+    search_repo = SearchRepository(db)
+    provider_repo = JobSearchProviderRepository(db)
+    vacancy_repo = VacancyRepository(db)
+    search_service = SearchService(search_repo, provider_repo)
+    vacancy_service = VacancyService(vacancy_repo)
+
+    class NoneProvider(BaseProvider):
+        def search(self, keyword: str, state: str, municipality: str) -> list[Vacancy]:
+            return []
+
+        def get_job(self, url: str) -> Vacancy | None:
+            return None
+
+        def normalize(self, raw_data: Mapping[str, object]) -> Vacancy:
+            raise RuntimeError("Should not be called")
+
+    factory = ProviderFactory()
+    factory.register("linkedin", NoneProvider())
+    scraper = ScraperService(search_service, vacancy_service, factory)
+
+    result = scraper.execute_by_url(
+        "https://www.linkedin.com/jobs/view/999", "linkedin"
+    )
+
+    assert result is None
+
+
+def test_run_scheduler_skips_inactive_providers(db: Session) -> None:
+    """Verify run_scheduler skips inactive provider associations."""
+    search_repo = SearchRepository(db)
+    provider_repo = JobSearchProviderRepository(db)
+    vacancy_repo = VacancyRepository(db)
+    search_service = SearchService(search_repo, provider_repo)
+    vacancy_service = VacancyService(vacancy_repo)
+
+    search = _build_search(keyword="python", active=True)
+    db.add(search)
+    db.commit()
+
+    provider_repo.add(
+        JobSearchProvider(search_id=search.id, provider="linkedin", active=True)
+    )
+    provider_repo.add(
+        JobSearchProvider(search_id=search.id, provider="glassdoor", active=False)
+    )
+
+    vacancy = _build_vacancy()
+    factory = ProviderFactory()
+    factory.register("linkedin", FakeProvider([vacancy]))
+    scraper = ScraperService(search_service, vacancy_service, factory)
+
+    metrics = scraper.run_scheduler()
+
+    assert metrics["searches"] == 1
+    assert metrics["vacancies"] == 1
