@@ -31,6 +31,7 @@ def test_scheduler_run_executes_active_searches(db: Session) -> None:
     provider_repo.add(
         JobSearchProvider(search_id=search.id, provider="linkedin", active=True)
     )
+    db.commit()
 
     vacancy = _build_vacancy()
     factory = ProviderFactory()
@@ -61,6 +62,7 @@ def test_scheduler_run_skips_inactive_searches(db: Session) -> None:
     provider_repo.add(
         JobSearchProvider(search_id=search.id, provider="linkedin", active=True)
     )
+    db.commit()
 
     scraper = ScraperService(search_service, vacancy_service, ProviderFactory())
     scheduler = Scheduler(scraper)

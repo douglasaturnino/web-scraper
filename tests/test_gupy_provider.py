@@ -464,3 +464,28 @@ def test_provider_implements_base_provider() -> None:
 
     provider = _provider()
     assert isinstance(provider, BaseProvider)
+
+
+def test_get_job_returns_none_for_invalid_url() -> None:
+    """Verify get_job returns None for URL with no extractable ID."""
+    from unittest.mock import patch
+
+    provider = _provider()
+
+    with patch("src.providers.gupy.get_settings", return_value=_mock_settings()):
+        vacancy = provider.get_job("https://jobs.gupy.io/invalid")
+
+    assert vacancy is None
+
+
+def _mock_settings():
+    from src.config.settings import Settings
+
+    return Settings(
+        database_url="sqlite:///:memory:",
+        max_concurrent_requests=4,
+        min_delay=0.0,
+        max_delay=0.0,
+        max_retries=1,
+        request_timeout=5,
+    )

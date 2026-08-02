@@ -20,6 +20,8 @@ class Settings(BaseSettings):
     request_timeout: int = 20
     job_retention_days: int = 90
     scheduler_hours: list[str] = ["12:00", "15:00", "18:00"]
+    cors_origins: list[str] = ["*"]
+    api_key: str = ""
 
 
 def get_settings() -> Settings:

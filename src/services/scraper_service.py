@@ -2,6 +2,7 @@
 
 from loguru import logger
 
+from src.config.metrics import record_execution
 from src.database.models.job_search import JobSearch
 from src.database.models.vacancy import Vacancy
 from src.providers.factory import ProviderFactory
@@ -70,6 +71,7 @@ class ScraperService:
             return []
 
         saved, _ = self._vacancy_service.save_vacancies(vacancies)
+        record_execution(provider_name, len(saved))
         logger.info(
             "Search {} completed on provider {} - saved: {}",
             search.id,
