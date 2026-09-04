@@ -2000,6 +2000,7 @@ Toda a aplicação deverá seguir o padrão de documentação Google Style para 
 - As docstrings devem seguir o formato Google Style.
 - Nenhum módulo novo será aceito sem documentação.
 - A documentação será verificada em CI/CD.
+- A documentação deverá ser feita em português pt-BR
 
 ## Formato
 
@@ -2191,14 +2192,14 @@ Centralizar todas as configurações da aplicação.
 
 ## Configurações
 
-- [ ] Criar classe `Settings`
-- [ ] Configurar leitura do `.env`
-- [ ] Configurar URL do PostgreSQL
-- [ ] Configurar timeout
-- [ ] Configurar concorrência
-- [ ] Configurar delays
-- [ ] Configurar retries
-- [ ] Configurar horários do Scheduler
+- [X] Criar classe `Settings`
+- [X] Configurar leitura do `.env`
+- [X] Configurar URL do PostgreSQL
+- [X] Configurar timeout
+- [X] Configurar concorrência
+- [X] Configurar delays
+- [X] Configurar retries
+- [X] Configurar horários do Scheduler
 
 ---
 
