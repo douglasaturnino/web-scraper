@@ -2829,4 +2829,3 @@ A divisão do desenvolvimento em Sprints com tarefas detalhadas proporciona um p
 
 Este documento deverá servir como referência para implementação, manutenção e evolução do sistema.
 
-
