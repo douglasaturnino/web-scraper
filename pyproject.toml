@@ -5,6 +5,7 @@ description = "Job Scraper Service - coletor de vagas de emprego"
 readme = "README.md"
 requires-python = ">=3.14"
 dependencies = [
+    "loguru>=0.7.3",
     "pydantic>=2.13.4",
     "pydantic-settings>=2.14.2",
 
