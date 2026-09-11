@@ -11,7 +11,7 @@ class Settings(BaseSettings):
 
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 
-    database_url: str = ""
+    database_url: str = "sqlite:///./app.db"
 
     max_concurrent_requests: int = 4
     min_delay: float = 3.0
