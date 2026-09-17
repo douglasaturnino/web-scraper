@@ -48,6 +48,10 @@ class FakeProvider(BaseProvider):
         """Return a single fake vacancy."""
         return self._vacancies[0] if self._vacancies else None
 
+    def normalize(self, raw_data: dict[str, object]) -> Vacancy:
+        """Return the first fake vacancy."""
+        return self._vacancies[0] if self._vacancies else _build_vacancy()
+
 
 def _build_vacancy(**kwargs: str | Any) -> Vacancy:
     """Build a vacancy with default values."""
@@ -126,6 +130,9 @@ def test_execute_search_handles_provider_error(db: Session) -> None:
 
         def get_job(self, url: str) -> Vacancy | None:
             return None
+
+        def normalize(self, raw_data: dict[str, object]) -> Vacancy:
+            raise RuntimeError("Provider failed")
 
     search = _build_search()
     providers = {"linkedin": ErrorProvider()}
