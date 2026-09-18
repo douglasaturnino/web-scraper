@@ -1,5 +1,7 @@
 """Provider factory tests."""
 
+from collections.abc import Mapping
+
 import pytest
 
 from src.database.models.vacancy import Vacancy
@@ -10,9 +12,7 @@ from src.providers.factory import ProviderFactory
 class StubProvider(BaseProvider):
     """Stub provider for tests."""
 
-    def search(
-        self, keyword: str, state: str, municipality: str, remote: bool
-    ) -> list[Vacancy]:
+    def search(self, keyword: str, state: str, municipality: str) -> list[Vacancy]:
         """Stub search."""
         return []
 
@@ -20,7 +20,7 @@ class StubProvider(BaseProvider):
         """Stub get job."""
         return None
 
-    def normalize(self, raw_data: dict[str, object]) -> Vacancy:
+    def normalize(self, raw_data: Mapping[str, object]) -> Vacancy:
         """Stub normalize."""
         raise NotImplementedError
 

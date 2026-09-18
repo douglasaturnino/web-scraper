@@ -1,5 +1,6 @@
 """Base provider protocol definition."""
 
+from collections.abc import Mapping
 from typing import Protocol, runtime_checkable
 
 from src.database.models.vacancy import Vacancy
@@ -9,16 +10,13 @@ from src.database.models.vacancy import Vacancy
 class BaseProvider(Protocol):
     """Provider interface for collection orchestration."""
 
-    def search(
-        self, keyword: str, state: str, municipality: str, remote: bool
-    ) -> list[Vacancy]:
+    def search(self, keyword: str, state: str, municipality: str) -> list[Vacancy]:
         """Search vacancies.
 
         Args:
             keyword (str): Search keyword.
             state (str): State filter.
             municipality (str): Municipality filter.
-            remote (bool): Remote vacancy filter.
 
         Returns:
             list[Vacancy]: Found vacancies.
@@ -34,11 +32,11 @@ class BaseProvider(Protocol):
             Vacancy | None: Found vacancy or None.
         """
 
-    def normalize(self, raw_data: dict[str, object]) -> Vacancy:
+    def normalize(self, raw_data: Mapping[str, object]) -> Vacancy:
         """Normalize raw provider data into a vacancy.
 
         Args:
-            raw_data (dict[str, object]): Raw vacancy data.
+            raw_data (Mapping[str, object]): Raw vacancy data.
 
         Returns:
             Vacancy: Normalized vacancy.
