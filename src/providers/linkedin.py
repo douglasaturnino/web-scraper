@@ -174,7 +174,7 @@ class LinkedinProvider(BaseProvider):
                 timeout = ClientTimeout(total=get_settings().request_timeout)
                 async with session.get(url, headers=headers, timeout=timeout) as resp:
                     status = resp.status
-                    text = await resp.text(errors="ignore")
+                    text: str = await resp.text(errors="ignore")
                     if status == 200:
                         await asyncio.sleep(
                             random.uniform(  # noqa: S311
