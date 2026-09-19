@@ -16,6 +16,7 @@ dependencies = [
 
 [dependency-groups]
 dev = [
+    "docstring-parser>=0.18.0",
     "httpx>=0.28.1",
     "mypy>=2.3.0",
     "pre-commit>=4.6.0",
@@ -53,10 +54,10 @@ convention = "google"
 [tool.ruff.format]
 docstring-code-format = true
 
-
 [tool.mypy]
 python_version = "3.14"
 strict = true
+files = ["src"]
 
 # Qualidade das mensagens
 pretty = true

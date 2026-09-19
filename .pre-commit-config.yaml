@@ -20,11 +20,18 @@ repos:
         language: system
         types: [python]
 
+      - id: pydocstring-type-checker
+        name: Pydocstring Type Checker
+        entry: uv run python scripts/check_docstring_types.py
+        language: system
+        types: [python]
+
       - id: mypy
         name: MyPy
         entry: uv run mypy
         language: system
         types: [python]
+        pass_filenames: false
 
       - id: pytest
         name: Pytest
