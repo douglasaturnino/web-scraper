@@ -27,6 +27,7 @@ def test_add_job_search_provider(db: Session) -> None:
     association = _build_association()
 
     result = repo.add(association)
+    db.commit()
 
     assert result.id is not None
     assert result.provider == "linkedin"

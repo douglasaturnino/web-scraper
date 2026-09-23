@@ -19,6 +19,21 @@ class SearchRepository:
         """
         self._session = session
 
+    def add(self, search: JobSearch) -> JobSearch:
+        """Stage a job search for persistence.
+
+        The object is written to the database on the next flush or commit,
+        allowing related objects to be persisted in a single transaction.
+
+        Args:
+            search (JobSearch): Search to persist.
+
+        Returns:
+            JobSearch: Persisted search.
+        """
+        self._session.add(search)
+        return search
+
     def get_all_active(self) -> list[JobSearch]:
         """Retrieve all active job searches.
 

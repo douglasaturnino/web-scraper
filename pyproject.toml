@@ -8,11 +8,13 @@ dependencies = [
     "aiohttp>=3.13.0",
     "alembic>=1.18.5",
     "beautifulsoup4>=4.13.0",
+    "fastapi>=0.141.1",
     "loguru>=0.7.3",
     "psycopg2-binary>=2.9.12",
     "pydantic>=2.13.4",
     "pydantic-settings>=2.14.2",
     "sqlalchemy>=2.0.51",
+    "uvicorn[standard]>=0.52.0",
 ]
 
 

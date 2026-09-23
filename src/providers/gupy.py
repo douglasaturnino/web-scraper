@@ -253,6 +253,67 @@ class GupyProvider(BaseProvider):
             description=str(raw_data.get("description") or ""),
         )
 
+    def get_job(self, url: str) -> Vacancy | None:
+        """Fetch a single vacancy by Gupy URL.
+
+        Args:
+            url (str): Gupy job URL.
+
+        Returns:
+            Vacancy | None: Found vacancy or None.
+        """
+        logger.info("Starting Gupy get_job url={}", url)
+        start = time.monotonic()
+        result = asyncio.run(self._get_job_async(url))
+        elapsed = time.monotonic() - start
+        logger.info("Gupy get_job completed in {:.2f}s", elapsed)
+        return result
+
+    async def _get_job_async(self, url: str) -> Vacancy | None:
+        """Async get_job implementation for Gupy.
+
+        Args:
+            url (str): Gupy job URL.
+
+        Returns:
+            Vacancy | None: Found vacancy or None.
+        """
+        job_id = self._extract_external_id(url)
+        if not job_id:
+            logger.warning("Could not extract job ID from URL: {}", url)
+            return None
+
+        async with AiohttpClientSession() as session:
+            queries: dict[str, str | int] = {"id": job_id}
+            data = await self._fetch_api(session, queries)
+
+            if data is None:
+                logger.warning("Failed to fetch Gupy job id={}", job_id)
+                return None
+
+            if isinstance(data, dict) and "data" in data:
+                raw_jobs = data["data"]
+                if isinstance(raw_jobs, list) and len(raw_jobs) > 0:
+                    try:
+                        return self.normalize(raw_jobs[0])
+                    except Exception:
+                        logger.exception(
+                            "Error normalizing Gupy vacancy for id={}",
+                            job_id,
+                        )
+                return None
+
+            if isinstance(data, dict):
+                try:
+                    return self.normalize(data)
+                except Exception:
+                    logger.exception(
+                        "Error normalizing Gupy vacancy for id={}",
+                        job_id,
+                    )
+
+            return None
+
     @staticmethod
     def _clean_url(url: str) -> str:
         """Remove query parameters from a URL.

@@ -20,7 +20,10 @@ class JobSearchProviderRepository:
         self._session = session
 
     def add(self, job_search_provider: JobSearchProvider) -> JobSearchProvider:
-        """Persist a job search provider association.
+        """Stage a provider association for persistence.
+
+        The object is written to the database on the next flush or commit,
+        allowing related objects to be persisted in a single transaction.
 
         Args:
             job_search_provider (JobSearchProvider): Association to persist.
@@ -29,7 +32,6 @@ class JobSearchProviderRepository:
             JobSearchProvider: Persisted association.
         """
         self._session.add(job_search_provider)
-        self._session.flush()
         return job_search_provider
 
     def get_by_search_id(self, search_id: UUID) -> list[JobSearchProvider]:

@@ -17,7 +17,6 @@ def _build_search(**kwargs: bool | str) -> JobSearch:
         "keyword": "python",
         "state": "SP",
         "municipality": "São Paulo",
-        "remote": False,
         "active": True,
     }
     defaults.update(kwargs)
@@ -72,6 +71,7 @@ def test_get_providers_for_search(db: Session) -> None:
 
     provider = JobSearchProvider(search_id=search.id, provider="linkedin", active=True)
     provider_repo.add(provider)
+    db.commit()
 
     providers = service.get_providers_for_search(search.id)
 
@@ -92,6 +92,7 @@ def test_is_search_elegible_with_active_providers(db: Session) -> None:
     provider_repo.add(
         JobSearchProvider(search_id=search.id, provider="linkedin", active=True)
     )
+    db.commit()
 
     assert service.is_search_elegible(search) is True
 

@@ -26,7 +26,6 @@ def _build_search(**kwargs: bool | str) -> JobSearch:
         "keyword": "python",
         "state": "SP",
         "municipality": "São Paulo",
-        "remote": False,
         "active": True,
     }
     defaults.update(kwargs)
@@ -192,6 +191,7 @@ def test_run_scheduler_executes_elegible_searches(db: Session) -> None:
     provider_repo.add(
         JobSearchProvider(search_id=search.id, provider="linkedin", active=True)
     )
+    db.commit()
 
     vacancy = _build_vacancy()
     factory = ProviderFactory()
@@ -306,6 +306,7 @@ def test_run_scheduler_skips_inactive_providers(db: Session) -> None:
     provider_repo.add(
         JobSearchProvider(search_id=search.id, provider="glassdoor", active=False)
     )
+    db.commit()
 
     vacancy = _build_vacancy()
     factory = ProviderFactory()
